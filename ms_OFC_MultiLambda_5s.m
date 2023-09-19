@@ -10,8 +10,8 @@ close all
 
 
 FileName = 'sim';
-FilePath = 'Reduced data/CST_R1.1_V04-Perturbation';
-RandFlag = 1; % random initial condition for cursor on or off
+FilePath = 'Reduced data/CST_R1.1_V05';
+PerturbFlag = 0; % random initial condition for cursor on or off
 
 
 Lambda_List = (.5:.4:6.5)';
@@ -33,7 +33,7 @@ simdata.delta  = .01;        % Discretization step: 10ms
 simdata.delay  = .05;        % feedback loop delay, xx time steps
 simdata.time   = 8;         % Reach time
 simdata.nStep  = simdata.time/simdata.delta+1;         % Number of time steps corresponding to reach time (600ms), plus terminal step
-simdata.effort = 1;
+simdata.effort = 10;
 Time           = (0:simdata.delta:simdata.time);
 Trials         = 300; % Number of simulation runs.
 
@@ -101,7 +101,7 @@ for i=1:size(Q_List,1)
             for n=1:Trials
                 tic
                 Flag2 = 0;
-                X0_rand = Init + RandFlag*[.01*sign(randn(1)) , 0,0,0,0]';
+                X0_rand = Init + PerturbFlag*[.01*sign(randn(1)) , 0,0,0,0]';
                 Sim(n) = model_1(Flag2,simdata,X0_rand,Finl,Obs,qq,C,Ke);
                 if n>1 % we only need the gains for first trial, the rest is repeated
                     Sim(n).C=[];

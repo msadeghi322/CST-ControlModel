@@ -29,8 +29,8 @@ switch Case
     
     case 1
         
-        %FilePath   = 'Reduced data/CST_R1.1_V02'; % **** Final version
-        FilePath   = 'Reduced data/CST_R1.1_V03-Perturbation';    % Normal distribution     
+        FilePath   = 'Reduced data/CST_R1.1_V02'; % **** Final version
+        %FilePath   = 'Reduced data/CST_R1.1_V03-Perturbation';    % Normal distribution     
         %FilePath   = 'Reduced data/CST_R1.1_V04-Perturbation'; % Fixed 1cm pertubation       
         
         Obs_List = [1 1 1 1 1];
@@ -489,7 +489,7 @@ for kk=length(StrategyList):-1:1%
     
     i = StrategyList(kk);
     % Difficulty levels
-    Thrsh = .85; % threshold for difficulty
+    Thrsh = .9; % threshold for difficulty
     Lambda_n1 = Lambda_List(idx)./Lambda_c(i);
     DL(1).ii = Lambda_n1<=Thrsh;
     DL(2).ii = Lambda_n1>Thrsh & Lambda_n1<1;
@@ -548,7 +548,7 @@ for kk=3:-1:1%length(StrategyList)
     
     i = StrategyList(kk);
     % Difficulty levels
-    Thrsh = .8; % threshold for difficulty
+    Thrsh = .9; % threshold for difficulty
     Lambda_n1 = Lambda_List(lmbd_idx)./Lambda_c(i);
     DL(1).ii = Lambda_n1<=Thrsh;
     DL(2).ii = Lambda_n1>Thrsh & Lambda_n1<1;
@@ -626,7 +626,7 @@ i2 = StrategyList(2);
 
 % Difficulty levels
 Thrsh_l = .0; % threshold for difficulty
-Thrsh_u = .7; % threshold for difficulty
+Thrsh_u = .9; % threshold for difficulty
 
 Lambda_n1 = Lambda_List(idx)./Lambda_c(i1);
 DL1.ii = Lambda_n1<=Thrsh_u  & Lambda_n1>=Thrsh_l;
@@ -686,7 +686,7 @@ for kk=length(StrategyList):-1:1%
     
     i = StrategyList(kk);
     % Difficulty levels
-    Thrsh = .7; % threshold for difficulty
+    Thrsh = .9; % threshold for difficulty
     Lambda_n1 = Lambda_List(lmbd_idx)./Lambda_c(i);
     DL(1).ii = Lambda_n1<=Thrsh;
     DL(2).ii = Lambda_n1>Thrsh & Lambda_n1<1;

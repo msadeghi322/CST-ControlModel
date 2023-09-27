@@ -678,6 +678,7 @@ sb1 = 4;
 sb2 = 9;
 y1 = D.CursorMeanPos; y1 = y1(:,lmbd_idx,:); % mean over trials
 y2 = D.CursorMeanVel; y2 = y2(:,lmbd_idx,:); % mean over trials
+Thrsh = [.7,.9,.9];
 
 [ RcorrModel , PhaseEigRatio ] = deal(NaN(3,3)); % model x difficulty 
 
@@ -686,14 +687,13 @@ for kk=length(StrategyList):-1:1%
     
     i = StrategyList(kk);
     % Difficulty levels
-    Thrsh = .9; % threshold for difficulty
     Lambda_n1 = Lambda_List(lmbd_idx)./Lambda_c(i);
-    DL(1).ii = Lambda_n1<=Thrsh;
-    DL(2).ii = Lambda_n1>Thrsh & Lambda_n1<1;
-    DL(3).ii = Lambda_n1>1;
+    DL(1).ii = Lambda_n1<=Thrsh(1);
+    DL(2).ii = Lambda_n1>Thrsh(1) & Lambda_n1<Thrsh(2);
+    DL(3).ii = Lambda_n1>Thrsh(3);
     
     
-    for lm = 1:1%length(DL) % loop over lambda
+    for lm = 1:length(DL) % loop over lambda
         
         subplot(sb1,sb2,kk+(lm-1)*sb2)
         hold all
@@ -730,12 +730,6 @@ for kk=2:-1:1%length(StrategyList)
     
     i = StrategyList(kk);
     % Difficulty levels
-    Lambda_n1 = Lambda_List(lmbd_idx)./Lambda_c(i);
-    DL(1).ii = Lambda_n1<=Thrsh;
-    DL(2).ii = Lambda_n1>Thrsh & Lambda_n1<1;
-    DL(3).ii = Lambda_n1>1;
-    
-    
     for lm = 1:length(DL) % loop over lambda
         subplot(sb1,sb2,5+(lm-1)*sb2)
         hold all
@@ -810,6 +804,7 @@ for dl=1:3
         B.FaceColor = GroupColor(i,:);
     end
     if dl==1;  ylabel('R');   end
+    set(gca,'xtick',[1,2],'xticklabel',{'Pos','Vel'})
     xlim([.5 2.5])
     ylim([0 1])
 end

@@ -10,28 +10,18 @@ close all
 
 
 FileName = 'sim';
-FilePath = 'Reduced data/CST_R1.1_V03-';
-RandFlag = 0; % random initial condition for cursor on or off
+FilePath = 'Reduced data/CST_R1.1_V05';
+PerturbFlag = 0; % random initial condition for cursor on or off
 
 
-Lambda_List = [.5:.4:6.5]';
+Lambda_List = (.5:.4:6.5)';
 Obs_List = [1 1 1 1 1];
 
-% Obs_List = [1 0 0 0 0 
-%             0 1 0 0 0 
-%             1 1 0 0 0 ];
-
-        
         
 MotorNoiseList = [.1  2.35
                   .1  2.05
                   .1  2.15];  
               
-% MotorNoiseList = [.4  1.5
-%                    .12 1.5
-%                    .25 1.5];
-        
-        
 Q_List = [1e5 0 0 0 0 
           0   1e10 0 0 0 
           1.1e1 1.5e2 0 0 0 ];
@@ -43,11 +33,7 @@ simdata.delta  = .01;        % Discretization step: 10ms
 simdata.delay  = .05;        % feedback loop delay, xx time steps
 simdata.time   = 8;         % Reach time
 simdata.nStep  = simdata.time/simdata.delta+1;         % Number of time steps corresponding to reach time (600ms), plus terminal step
-%simdata.noise  = [.2 1.2];   % Motor, and Signal dependent noise, standard values.
-%simdata.noise  = [.2 1.4];   % Motor, and Signal dependent noise, standard values.
-%simdata.noise  = [.01 .4];   % Motor, and Signal dependent noise, standard values.
-%simdata.noise  = [.1 1];   % Motor, and Signal dependent noise, standard values.
-simdata.effort = 1;
+simdata.effort = 10;
 Time           = (0:simdata.delta:simdata.time);
 Trials         = 300; % Number of simulation runs.
 
@@ -83,9 +69,6 @@ for i=1:size(Q_List,1)
             Init = [cp0,cv0,hp0,hv0,F0]';
             Finl = [0 0 0 0 0]';
 
-            
-            
-            
             clear Sim
             flp = sprintf('%s/Q%d_H%d',FilePath,i,j);
             fln = sprintf('%s/%s_L%d.mat',flp,FileName,k);
@@ -118,7 +101,7 @@ for i=1:size(Q_List,1)
             for n=1:Trials
                 tic
                 Flag2 = 0;
-                X0_rand = Init + RandFlag*[.03*randn(1) , 0,0,0,0]';
+                X0_rand = Init + PerturbFlag*[.01*sign(randn(1)) , 0,0,0,0]';
                 Sim(n) = model_1(Flag2,simdata,X0_rand,Finl,Obs,qq,C,Ke);
                 if n>1 % we only need the gains for first trial, the rest is repeated
                     Sim(n).C=[];
@@ -247,13 +230,6 @@ function Sim = model_1(Flag, simdata,Init,Final,Obs,qq,C,Ke)
 tau = simdata.tau;
 M   = simdata.mass;
 L   = simdata.Lambda;
-
-% simdata.B = [0 0 0 0 1/(tau)]';
-% simdata.A = [L 0 L 0 0
-%              0 L 0 L 0
-%              0 0 0 1 0
-%              0 0 0 0 1/M
-%              0 0 0 0 -1/tau];
 
 simdata.B = [0 0 0 0 1/(tau)]';
 simdata.A = [0 1 0 0 0

@@ -10,21 +10,27 @@ close all
 
 
 FileName = 'sim';
-FilePath = 'Reduced data/CST_R1.1_V05';
+FilePath = 'Reduced data/CST_R1.2_EffortSensitivity';
 PerturbFlag = 0; % random initial condition for cursor on or off
 
-
+%% Fixed parameters
 Lambda_List = (.5:.4:6.5)';
 Obs_List = [1 1 1 1 1];
-
-        
-MotorNoiseList = [.1  2.35
-                  .1  2.05
-                  .1  2.15];  
-              
+%Q_List = [0   1e10 0 0 0 ]; % Let's fix things on velocity control
 Q_List = [1e5 0 0 0 0 
-          0   1e10 0 0 0 
-          1.1e1 1.5e2 0 0 0 ];
+          0   1e10 0 0 0];
+      
+      
+%% Independent parameters 
+DelayList = [20, 50, 80];
+EffortCostList = [1, 10 , 100 , 1000];
+
+%% Tunning parameters:
+% These parameters are tuned to result in a fixed success rate when
+% changing the independent parameters
+MotorNoiseList = [.1  2.35
+                  .1  2.05];
+SensoryNoise  = diag([1e-6 , 1e-6 , 1e-6 , 1e-6 , 1e-6]);              
 
 
 simdata.tau    = .07;
@@ -33,30 +39,26 @@ simdata.delta  = .01;        % Discretization step: 10ms
 simdata.delay  = .05;        % feedback loop delay, xx time steps
 simdata.time   = 8;         % Reach time
 simdata.nStep  = simdata.time/simdata.delta+1;         % Number of time steps corresponding to reach time (600ms), plus terminal step
-simdata.effort = 10;
 Time           = (0:simdata.delta:simdata.time);
 Trials         = 300; % Number of simulation runs.
 
+% feedback type (Matrix H): cursor(c)/hand(h); pos(p)/vel(v)/acc(a): Assuming only one
+% observation
+Obs = licols( diag(Obs_List(1,:)) )';
+Omega = licols(Obs*SensoryNoise);
+simdata.Omega = Omega;
 
-SensoryNoise  = diag([1e-6 , 1e-6 , 1e-6 , 1e-6 , 1e-6]);
 
 
 c=1;
 for i=1:size(Q_List,1)
-    
     % Q matrix: which state should be penalized more
     qq = Q_List(i,:)';
     simdata.noise  = MotorNoiseList(i,:);   % Motor, and Signal dependent noise, standard values.
 
+    for j=1:size(EffortCostList,1)
+        simdata.effort = EffortCostList(j);
     
-    for j=1:size(Obs_List,1)
-        
-        % feedback type (Matrix H): cursor(c)/hand(h); pos(p)/vel(v)/acc(a): Assuming only one
-        % observation
-        Obs = licols( diag(Obs_List(j,:)) )';
-        Omega = licols(Obs*SensoryNoise);
-        simdata.Omega = Omega;
-        
         for k=1:length(Lambda_List)
             L = Lambda_List(k);
             simdata.Lambda = L;
@@ -86,13 +88,13 @@ for i=1:size(Q_List,1)
             
             % Solve the OFC and check if solution is valid (converged). If
             % not, perturb the Q matrix a bit and try again.
-            Flag_NemericalError = 1; % check if the solution is valid
-            while Flag_NemericalError==1
+            Flag_NumericalError = 1; % check if the solution is valid
+            while Flag_NumericalError==1
                 Sim1 = model_1(Flag1,simdata,Init,Finl,Obs,qq,[],[]);
                 if max(abs(Sim1.C_p))>1e4 && L<8
                     qq = qq*( 1+ .1*randn(1) );
                 else
-                    Flag_NemericalError=0;
+                    Flag_NumericalError=0;
                 end
             end
             

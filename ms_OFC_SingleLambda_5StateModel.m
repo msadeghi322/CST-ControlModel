@@ -19,7 +19,7 @@ set(0, 'DefaultFigureRenderer', 'painters');
 %   DOI: https://doi.org/10.1523/JNEUROSCI.0770-19.2019
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-          L    = 4.1;
+          L    = 4.0;
 simdata.tau    = .07;    % muscle parameter
 simdata.Lambda = L;
 simdata.mass   = 1;
@@ -27,9 +27,8 @@ simdata.delta  = .01;        % Discretization step: 10ms
 simdata.delay  = .05;        % feedback loop delay, xx time steps
 simdata.time   = 8;         % Reach time
 simdata.nStep  = simdata.time/simdata.delta+1;         % Number of time steps corresponding to reach time (600ms), plus terminal step
-simdata.noise  = [.1 2.35];   % Motor, and Signal dependent noise, standard values.
-%simdata.noise = [.4 1 1.5];       % Motor, Sensory and Signal dependent noise, standard values.
-simdata.effort = 1;
+simdata.noise  = [.1 2.05];   % Motor, and Signal dependent noise, standard values.
+simdata.effort = 10;
 Time           = (0:simdata.delta:simdata.time);
 simdata.nsimu  = 100; % Number of simulation runs.
 
@@ -62,8 +61,8 @@ simdata.Omega = Omega;
 
 
 % Q matrix: which state should be penalized more
-Q_cp = 1e5;
-Q_cv = 0e10;
+Q_cp = 0e5;
+Q_cv = 1e10;
 Q_hp = 0;
 Q_hv = 0;
 Q_f  = 0;

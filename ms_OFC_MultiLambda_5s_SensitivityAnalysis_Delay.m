@@ -10,7 +10,7 @@ close all
 
 
 FileName = 'sim';
-FilePath = 'Reduced data/CST_R1.2_test5';
+FilePath = 'Reduced data/CST_R1.2_Sensitivity_Delay01';
 PerturbFlag = 0; % random initial condition for cursor on or off
 
 %% Fixed parameters
@@ -22,8 +22,7 @@ Q_List = [1e5 0 0 0 0
       
       
 %% Independent parameters 
-DelayList      = [20, 50, 100];
-EffortCostList = [10, 100 , 1000];
+DelayList      = [20, 50, 100]/1000;
 
 %% Tunning parameters:
 % These parameters are tuned to result in a fixed success rate when
@@ -34,9 +33,9 @@ SensoryNoise   = diag([1e-6 , 1e-6 , 1e-6 , 1e-6 , 1e-6]);
 simdata.tau    = .07;
 simdata.mass   = 1;
 simdata.delta  = .01;        % Discretization step: 10ms
-simdata.delay  = .05;        % feedback loop delay, xx time steps
 simdata.time   = 8;         % Reach time
 simdata.nStep  = simdata.time/simdata.delta+1;         % Number of time steps corresponding to reach time (600ms), plus terminal step
+simdata.effort = 10;
 Time           = (0:simdata.delta:simdata.time);
 Trials         = 200; % Number of simulation runs.
 
@@ -54,9 +53,9 @@ for i=1:size(Q_List,1)
     qq = Q_List(i,:)';
     simdata.noise  = MotorNoiseList(i,:);   % Motor, and Signal dependent noise, standard values.
 
-    for j=1:size(EffortCostList,2)
-        simdata.effort = EffortCostList(j);
-    
+    for j=1:size(DelayList,2)
+        simdata.delay  = DelayList(j);        % feedback loop delay, xx time steps
+
         for k=1:length(Lambda_List)
             L = Lambda_List(k);
             simdata.Lambda = L;

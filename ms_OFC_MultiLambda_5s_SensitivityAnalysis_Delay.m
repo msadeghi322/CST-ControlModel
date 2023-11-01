@@ -10,7 +10,7 @@ close all
 
 
 FileName = 'sim';
-FilePath = 'Reduced data/CST_R1.2_Sensitivity_Delay01';
+FilePath = 'Reduced data/CST_R1.2_Sensitivity_Delay02';
 PerturbFlag = 0; % random initial condition for cursor on or off
 
 %% Fixed parameters
@@ -22,7 +22,7 @@ Q_List = [1e5 0 0 0 0
       
       
 %% Independent parameters 
-DelayList      = [20, 50, 100]/1000;
+DelayList      = [30, 50, 70]/1000;
 
 %% Tunning parameters:
 % These parameters are tuned to result in a fixed success rate when

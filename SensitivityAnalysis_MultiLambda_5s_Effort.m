@@ -29,13 +29,13 @@ switch Case
     
     case 1
         
-        FilePath = 'Reduced data/CST_R1.2_EffortSensitivity2';
-        EffortCostList = [.01,10,1e4];
-        StrategyList = [1,2,3]; 
+%         FilePath = 'Reduced data/CST_R1.2_EffortSensitivity2';
+%         EffortCostList = [.01,10,1e4];
+%         StrategyList = [1,2,3]; 
         
-        %FilePath = 'Reduced data/CST_R1.2_test4';
-        %EffortCostList = [10, 1e6 , 1e8];
-        %StrategyList = [4,5,6]; 
+        FilePath = 'Reduced data/CST_R1.2_test4';
+        EffortCostList = [10, 1e6 , 1e8];
+        StrategyList = [4,5,6]; 
         
         %FilePath = 'Reduced data/CST_R1.2_test3';
         %EffortCostList = [10, 1e10];

@@ -29,9 +29,14 @@ switch Case
     
     case 1
         
-        FilePath = 'Reduced data/CST_R1.2_Sensitivity_Delay01';
+%         FilePath = 'Reduced data/CST_R1.2_Sensitivity_Delay01';
+%         StrategyList = [1,2,3]; 
+%         DelayList      = [20, 50, 100]/1000;
+        
+        FilePath = 'Reduced data/CST_R1.2_Sensitivity_Delay02';
         StrategyList = [1,2,3]; 
-        DelayList      = [20, 50, 100]/1000;
+        DelayList      = [30, 50, 70]/1000;
+        
 
         Obs_List = [1 1 1 1 1];
         Q_List = [1e5 0 0 0 0 
